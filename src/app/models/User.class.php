@@ -18,5 +18,9 @@
         public function inscription() {
             return 1;
         }
+
+        public function __toString() {
+            return "Id: ".$this->idUser." | Login: ".$this->login." | Mdp: ".$this->mdp." | Droits: ".$this->droits;
+        }
     }
 ?>

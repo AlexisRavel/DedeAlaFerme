@@ -1,7 +1,8 @@
 <?php
     abstract class Jeu {
         public function __construct(
-            private string $regles
+            private string $regles,
+            private array $parties
         ) {}
 
         // Aff le classement des gagnants de toutes les parties ->  login : score

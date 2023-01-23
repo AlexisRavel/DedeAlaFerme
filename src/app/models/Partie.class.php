@@ -2,7 +2,7 @@
     class Partie {
         public function __construct(
             private string $datePartie,
-            private int $score
+            private int $score = 0
         ) {}
     }
 ?>
