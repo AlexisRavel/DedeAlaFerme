@@ -9,7 +9,27 @@
             private int $nbLancer,
             private array $tableDe
         ) {
-            parent::__construct($regles, $parties);
+            parent::__construct($regles);
+        }
+
+        public function __get($name) {
+            return match($name) {
+                "regles" => $this->regles,
+                "parties" => $this->parties,
+                "nbDes" => $this->nbDes,
+                "nbLancer" => $this->nbLancer,
+                "tableDe" => $this->tableDe
+            };
+        }
+
+        public function __set($name, $value){
+            match($name) {
+                "regles" => $this->regles=$value,
+                "parties" => $this->parties=$value,
+                "nbDes" => $this->nbDes=$value,
+                "nbLancer" => $this->nbLancer=$value,
+                "tableDe" => $this->tableDe=$value
+            };
         }
 
         // Lance les des, retourne rien

@@ -7,6 +7,24 @@
             private string $droits
         ) {}
 
+        public function __get($name) {
+            return match($name) {
+                "idUser" => $this->idUser,
+                "login" => $this->login,
+                "mdp" => $this->mdp,
+                "joueurs" => $this->joueurs
+            };
+        }
+
+        public function __set($name, $value){
+            match($name) {
+                "idUser" => $this->idUser=$value,
+                "login" => $this->login=$value,
+                "mdp" => $this->mdp=$value,
+                "droits" => $this->droits=$value
+            };
+        }
+
         public function connecter() {
             return 1;
         }
