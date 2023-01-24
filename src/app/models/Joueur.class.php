@@ -42,9 +42,13 @@
 
             // Création d'une partie
             $date = new DateTime('now', new DateTimeZone("Europe/Paris"));
-            $partie = new Partie($date, 0, $jeu, [$j1, $rand]);
+            $partie = new Partie($date, [], $jeu, [$j1, $rand]);
             $this->parties[] = $partie;
             $rand->parties[] = $partie;
+            
+            for($i=0; $i<count($partie->joueurs); $i++) {
+                $partie->score = $partie->jeu->jouer();
+            }
         }
 
         public function __toString() {
