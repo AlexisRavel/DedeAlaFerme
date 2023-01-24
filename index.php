@@ -8,14 +8,19 @@
     include("src/app/models/JeuBateau.class.php");
     include("src/app/models/Joueur.class.php");
 
+    $tabJoueurs = [];
     // Init des joueurs
-    $j1 = new Joueur(1, "Joueur1", "megaMdp", "aucun");
-    $j2 = new Joueur(2, "Joueur2", "lemdp", "aucun");
+    $user1 = new User(1, "Joueur1", "megaMdp", "aucun");
+    $user2 = new User(2, "Joueur2", "lemdp", "aucun");
+    $tabJoueurs[] = $j1 = $user1->inscription();
+    $tabJoueurs[] = $j2 = $user2->inscription();
 
-    $j1->lancerPartie();
+    // Init des jeux
+    
+    $megaJeu = new JeuBateau();
+
+    $j1->lancerPartie($j1, $tabJoueurs, 1);
 
     echo "<p>$j1</p>";
     echo "<p>$j2</p>";
-
-
 ?>

@@ -3,16 +3,17 @@
 
     class JeuBateau extends JeuDeDes {
         public function __construct(
-            private string $regles,
-            private array $parties,
-            private int $nbDes,
-            private int $nbLancer,
-            private array $tableDe,
-            private bool $aUnCapitaine,
-            private bool $aUnEquipage,
-            private bool $aUnBateau,
-            private bool $equipageComplet
+            private string $regles = "",
+            private array $parties = [],
+            private int $nbDes = 5,
+            private int $nbLancer = 3,
+            private array $tableDe = [],
+            private bool $aUnCapitaine = FALSE,
+            private bool $aUnEquipage = FALSE,
+            private bool $aUnBateau = FALSE,
+            private bool $equipageComplet = FALSE
         ) {
+            $regles = "Lancer les dés";
             parent::__construct($regles, $parties, $nbDes, $nbLancer, $tableDe);
         }
 

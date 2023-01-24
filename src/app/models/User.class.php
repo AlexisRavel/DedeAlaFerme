@@ -33,8 +33,9 @@
             return 1;
         }
 
+        // Return un nouveau joueur avec les param de user
         public function inscription() {
-            return 1;
+            return new Joueur($this->idUser, $this->login, $this->mdp, $this->droits);
         }
 
         public function __toString() {
