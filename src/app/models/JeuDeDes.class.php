@@ -34,14 +34,15 @@
 
         // Lance les des, retourne tableDe -> la liste de tout les lancers
         public function lancerDes() {
+            $this->tableDe = [];
             for($i=0; $i<$this->nbLancer; $i++) {
                 $tabLancer = [];
                 for($y=0; $y<$this->nbDes; $y++) {
                     $tabLancer[] = random_int(1, 6);
                 }
-                $tableDe[] = $tabLancer;
+                $this->tableDe[] = $tabLancer;
             }
-            return $tableDe;
+            return $this->tableDe;
         }
     }
 ?>
