@@ -32,25 +32,28 @@
             };
         }
 
-        public function lancerPartie($j1, $tabJoueurs, $jeu) {
-            // Prends un autre joueur au hasard
-            /*
-                A AMELIORER
-            */
-            $rand = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
-            while($rand == $j1) {
-                $rand = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
+        public function lancerPartie($j1, $tabJoueurs, $nbJoueur, $jeu) {
+            // Prends d'autres joueurs au hasard
+            $joueursConcurrent = [$j1];
+            for($i=1; $i<$nbJoueur; $i++) {
+                $joueurRandom = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
+                while(in_array($joueurRandom, $joueursConcurrent)) {
+                    $joueurRandom = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
+                }
+                $joueursConcurrent[] = $joueurRandom;
             }
 
             // Création d'une partie
             $date = new \DateTime('now', new \DateTimeZone("Europe/Paris"));
-            $partie = new Partie($date, [], $jeu, [$j1, $rand]);
-            $this->parties[] = $partie;
-            $rand->parties[] = $partie;
+            $partie = new Partie($date, [], $jeu, $joueursConcurrent);
+            for($i=0; $i<count($joueursConcurrent); $i++) {
+                $joueursConcurrent[$i]->parties[] = $partie;
+            }
             
             for($i=0; $i<count($partie->joueurs); $i++) {
                 $partie->score = $jeu->jouer();
             }
+            $partie->definirGagnant();
         }
 
         public function __toString() {

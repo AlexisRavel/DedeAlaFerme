@@ -6,7 +6,8 @@
             private \DateTime $datePartie,
             private array $score = [],
             private Jeu $jeu,
-            private array $joueurs = []
+            private array $joueurs = [],
+            private array $gagnant = []
         ) {}
 
         public function __get($name) {
@@ -14,7 +15,8 @@
                 "datePartie" => $this->datePartie,
                 "score" => $this->score,
                 "jeu" => $this->jeu,
-                "joueurs" => $this->joueurs
+                "joueurs" => $this->joueurs,
+                "gagnant" => $this->gagnant
             };
         }
 
@@ -23,8 +25,21 @@
                 "datePartie" => $this->datePartie=$value,
                 "score" => $this->score[]=$value,
                 "jeu" => $this->jeu=$value,
-                "joueurs" => $this->joueurs=$value
+                "joueurs" => $this->joueurs=$value,
+                "gagnant" => $this->gagnant=$value
             };
+        }
+
+        public function definirGagnant() {
+            $plusGrandScore = 0;
+            $joueurGagnant = null;
+            for($i=0; $i<count($this->joueurs); $i++) {
+                if($this->score[$i]["Score"] > $plusGrandScore) {
+                    $plusGrandScore = $this->score[$i]["Score"];
+                    $joueurGagnant = $this->joueurs[$i];
+                }
+            }
+            $this->gagnant = [$joueurGagnant, $plusGrandScore];
         }
 
         public function __toString() {
@@ -38,6 +53,7 @@
                 $aff = $aff.$this->joueurs[$i]->login.": ".$this->score[$i]["Score"]."<br><br>";
                 $aff = $aff.$this->affHistorique($this->score[$i]["Historique"]);
             }
+            $aff = $aff."Gagnant: ".$this->gagnant[0]->login." avec ".$this->gagnant[1]." de score";
             return $aff;
         }
 
