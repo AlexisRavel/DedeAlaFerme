@@ -1,7 +1,7 @@
 <?php
     namespace src\app\models;
 
-    class User {
+    abstract class User {
         public function __construct(
             private int $idUser,
             protected string $login,
@@ -35,9 +35,8 @@
             return 1;
         }
 
-        // Return un nouveau joueur avec les param de user
         public function inscription() {
-            return new Joueur($this->idUser, $this->login, $this->mdp, $this->droits);
+            return 1;
         }
 
         public function __toString() {

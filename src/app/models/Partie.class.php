@@ -4,7 +4,7 @@
     class Partie {
         public function __construct(
             private \DateTime $datePartie,
-            private array $score = [],
+            private array $donnéesPartie = [],
             private Jeu $jeu,
             private array $joueurs = [],
             private array $gagnant = []
@@ -13,7 +13,7 @@
         public function __get($name) {
             return match($name) {
                 "datePartie" => $this->datePartie,
-                "score" => $this->score,
+                "donnéesPartie" => $this->donnéesPartie,
                 "jeu" => $this->jeu,
                 "joueurs" => $this->joueurs,
                 "gagnant" => $this->gagnant
@@ -23,7 +23,7 @@
         public function __set($name, $value){
             match($name) {
                 "datePartie" => $this->datePartie=$value,
-                "score" => $this->score[]=$value,
+                "donnéesPartie" => $this->donnéesPartie[]=$value,
                 "jeu" => $this->jeu=$value,
                 "joueurs" => $this->joueurs=$value,
                 "gagnant" => $this->gagnant=$value
@@ -34,8 +34,8 @@
             $plusGrandScore = 0;
             $joueurGagnant = null;
             for($i=0; $i<count($this->joueurs); $i++) {
-                if($this->score[$i]["Score"] > $plusGrandScore) {
-                    $plusGrandScore = $this->score[$i]["Score"];
+                if($this->donnéesPartie[$i]["Score"] > $plusGrandScore) {
+                    $plusGrandScore = $this->donnéesPartie[$i]["Score"];
                     $joueurGagnant = $this->joueurs[$i];
                 }
             }
@@ -47,11 +47,11 @@
             $aff = "<br>Partie du ".$date."<br>";
             $aff = $aff.$this->jeu."<br><br>";
             for($i=0; $i<count($this->joueurs); $i++) {
-                if($this->score[$i]["JetGagnant"]) {
-                    $aff = $aff.$this->affJetGagnant($this->score[$i]["JetGagnant"]);
+                if($this->donnéesPartie[$i]["JetGagnant"]) {
+                    $aff = $aff.$this->affJetGagnant($this->donnéesPartie[$i]["JetGagnant"]);
                 }
-                $aff = $aff.$this->joueurs[$i]->login.": ".$this->score[$i]["Score"]."<br><br>";
-                $aff = $aff.$this->affHistorique($this->score[$i]["Historique"]);
+                $aff = $aff.$this->joueurs[$i]->login.": ".$this->donnéesPartie[$i]["Score"]."<br><br>";
+                $aff = $aff.$this->affHistorique($this->donnéesPartie[$i]["Historique"]);
             }
             $aff = $aff."Gagnant: ".$this->gagnant[0]->login." avec ".$this->gagnant[1]." de score";
             return $aff;

@@ -51,7 +51,7 @@
             }
             
             for($i=0; $i<count($partie->joueurs); $i++) {
-                $partie->score = $jeu->jouer();
+                $partie->donnéesPartie = $jeu->jouer();
             }
             $partie->definirGagnant();
         }
