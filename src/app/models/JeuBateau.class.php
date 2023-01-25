@@ -12,7 +12,6 @@
             private int $nbDes = 5,
             private int $nbLancer = 3,
             private array $tableDe = [],
-            private array $historiqueJeu = [],
             private bool $aUnBateau = FALSE,
             private bool $aUnCapitaine = FALSE,
             private bool $aUnEquipage = FALSE,
@@ -28,7 +27,6 @@
                 "nbDes" => $this->nbDes,
                 "nbLancer" => $this->nbLancer,
                 "tableDe" => $this->tableDe,
-                "historiqueJeu" => $this->historiqueJeu,
                 "aUnBateau" => $this->aUnBateau,
                 "aUnCapitaine" => $this->aUnCapitaine,
                 "aUnEquipage" => $this->aUnEquipage,
@@ -43,7 +41,6 @@
                 "nbDes" => $this->nbDes=$value,
                 "nbLancer" => $this->nbLancer=$value,
                 "tableDe" => $this->tableDe=$value,
-                "historiqueJeu" => $this->historiqueJeu=$value,
                 "aUnBateau" => $this->aUnBateau=$value,
                 "aUnCapitaine" => $this->aUnCapitaine=$value,
                 "aUnEquipage" => $this->aUnEquipage=$value,
@@ -51,60 +48,8 @@
             };
         }
 
-        /*
-            Lance les dés puis set mapJeuBateau -> tableau associatif des données des lancers du joueur
-            ["Historique"] => Tout les lancers effectuer jusqu'à la possiblité de calculer le score
-            ["JetGagnant"] => Le dernier jet effectuer sans les dés compter pour la condition de victoire
-            ["Score"] => Le score calculer à partir du jet gagnant
-        */
-        public function jouer() {
-            $this->resetJeu();
-            $lancers = parent::lancerDes();
-            $this->historiqueJeu = $lancers;
-
-            for($i=0; $i<count($lancers); $i++) {
-                $this->verifLancer($lancers[$i]);
-                if($this->equipageComplet) {
-                    $mapJeuBateau = array();
-
-                    // Enregistrement historique
-                    // Ne prends que l'historique du nb de lancer suffisant
-                    // (ex: si 6, 5 et 4 en deux lancer, ne prendra pas le troisième lancer)
-                    $histo = array();
-                    $cpt = $i;
-                    while($cpt>=0) {
-                        $histo[] = $this->historiqueJeu[$cpt];
-                        $cpt--;
-                    }
-                    $histo = array_reverse($histo);
-                    $mapJeuBateau["Historique"] = $histo;
-
-                    // Jet gagnant = jet grâce auquel on rentre dans la boucle
-                    // Et qui comprends seulement les des necessaires pour le score 
-                    $mapJeuBateau["JetGagnant"] = $lancers[$i];
-                    
-                    // Calcul du score grâce au jet gagnant
-                    $score = 0;
-                    for($y=0; $y<count($lancers[$i]); $y++) {
-                        $score += $lancers[$i][$y];
-                    }
-                    $mapJeuBateau["Score"] = $score;
-
-                    return $mapJeuBateau;
-                }
-            }
-
-            $mapJeuBateau = array();
-            $mapJeuBateau["Historique"] = $this->historiqueJeu;
-            $mapJeuBateau["JetGagnant"] = null;
-            $mapJeuBateau["Score"] = 0;
-            return $mapJeuBateau;
-        }
-
-        // Appel une fonction verif correspondante au boolean == TRUE:
-        // Si dans les lancers précédants -> aUnBateau == TRUE:
-        // Alors verif seulement le capitaine et l'équipage
-        private function verifLancer(&$tabLancer) {
+       
+        public function traitementLancer($tabLancer, $numLancer, $table) {
             if($this->aUnBateau && $this->aUnCapitaine) {
                 $this->verifSiEquipage($tabLancer);
             } elseif($this->aUnBateau) {
@@ -112,6 +57,21 @@
             } else {
                 $this->verifSiRien($tabLancer);
             }
+
+            if($this->equipageComplet) {
+                $score = 0;
+                for($i=0; $i<count($tabLancer); $i++) {
+                    $score += $tabLancer[$i];
+                }
+                end($this->parties)->scores = ["Score"=>$score, "Historique"=>$table];
+                return 1;
+            }
+            if($numLancer+1 == $this->nbLancer) {
+                end($this->parties)->scores = ["Score"=>0, "Historique"=>$table];
+                return 1;
+            }
+
+            return 0;
         }
 
         /*
@@ -130,15 +90,18 @@
                 $this->aUnBateau = TRUE;
                 unset($tabLancer[array_search(self::VAL_BATEAU, $tabLancer)]);
                 $tabLancer = array_values($tabLancer);
+                parent::__set("nbDes", parent::__get("nbDes")-1);
                 if(in_array(self::VAL_CAPITAINE, $tabLancer)) {
                     $this->aUnCapitaine = TRUE;
                     unset($tabLancer[array_search(self::VAL_CAPITAINE, $tabLancer)]);
                     $tabLancer = array_values($tabLancer);
+                    parent::__set("nbDes", parent::__get("nbDes")-1);
                     if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
                         $this->aUnEquipage = TRUE;
                         unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
                         $tabLancer = array_values($tabLancer);
                         $this->equipageComplet = TRUE;
+                        parent::__set("nbDes", parent::__get("nbDes")-1);
                     }
                 }
             }
@@ -149,11 +112,13 @@
                 $this->aUnCapitaine = TRUE;
                 unset($tabLancer[array_search(self::VAL_CAPITAINE, $tabLancer)]);
                 $tabLancer = array_values($tabLancer);
+                parent::__set("nbDes", parent::__get("nbDes")-1);
                 if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
                     $this->aUnEquipage = TRUE;
                     unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
                     $tabLancer = array_values($tabLancer);
                     $this->equipageComplet = TRUE;
+                    parent::__set("nbDes", parent::__get("nbDes")-1);
                 }
             }
         }
@@ -164,13 +129,14 @@
                 unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
                 $tabLancer = array_values($tabLancer);
                 $this->equipageComplet = TRUE;
+                parent::__set("nbDes", parent::__get("nbDes")-1);
             }
         }
 
         // Reset les booleans et les tableaux pour les prochains lancers
-        private function resetJeu() {
+        public function resetJeu() {
+            parent::__set("nbDes", 5);
             $this->tableDe = array();
-            $this->historiqueJeu = array();
             $this->aUnBateau = FALSE;
             $this->aUnCapitaine = FALSE;
             $this->aUnEquipage = FALSE;

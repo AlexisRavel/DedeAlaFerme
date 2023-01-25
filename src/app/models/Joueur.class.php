@@ -46,12 +46,15 @@
             // Création d'une partie
             $date = new \DateTime('now', new \DateTimeZone("Europe/Paris"));
             $partie = new Partie($date, [], $jeu, $joueursConcurrent);
+            $parties = $jeu->parties;
+            $parties[] = $partie;
+            $jeu->parties = $parties;
             for($i=0; $i<count($joueursConcurrent); $i++) {
                 $joueursConcurrent[$i]->parties[] = $partie;
             }
             
             for($i=0; $i<count($partie->joueurs); $i++) {
-                $partie->donnéesPartie = $jeu->jouer();
+                $jeu->lancerDes();
             }
             $partie->definirGagnant();
         }

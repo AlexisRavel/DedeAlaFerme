@@ -34,15 +34,25 @@
 
         // Lance les des, retourne tableDe -> la liste de tout les lancers
         public function lancerDes() {
+            $this->resetJeu();
             $this->tableDe = [];
+            $finTraitement = 0;
             for($i=0; $i<$this->nbLancer; $i++) {
                 $tabLancer = [];
                 for($y=0; $y<$this->nbDes; $y++) {
                     $tabLancer[] = random_int(1, 6);
                 }
                 $this->tableDe[] = $tabLancer;
+                $finTraitement = $this->traitementLancer($tabLancer, $i, $this->tableDe);
+                if($finTraitement) {
+                    return 1;
+                }
             }
-            return $this->tableDe;
         }
+
+        // Reset les booleans et les tableaux pour les prochains lancers
+        abstract function resetJeu();
+
+        abstract function traitementLancer($tabLancer, $numLancer, $table);
     }
 ?>

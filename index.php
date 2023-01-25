@@ -8,23 +8,63 @@
     namespace src\app\models;
     require("autoload.php");
 
-    $tabJoueurs = [];
-    
     // Init des joueurs
+    $tabJoueurs = [];
     $tabJoueurs[] = $j1 = new Joueur(1, "Joueur1", "megaMdp", "aucun");
     $tabJoueurs[] = $j2 = new Joueur(2, "Joueur2", "lemdp", "aucun");
     $tabJoueurs[] = $j3 = new Joueur(3, "Joueur3", "ui", "aucun");
     $tabJoueurs[] = $j4 = new Joueur(4, "Joueur4", "1234", "aucun");
-    echo "<p>$j1</p>";
-    echo "<p>$j2</p>";
-    echo "<p>$j3</p>";
-    echo "<p>$j4</p>";
     
     // Init des jeux
     $megaJeu = new JeuBateau();
-    $nbJoueur = 4;
-
-    $j1->lancerPartie($j1, $tabJoueurs, $nbJoueur,$megaJeu);
-    echo $j1->parties[0];
+    $nbJoueur = 2;
+    
+    if(isset($_POST["partie"]) && $_POST["partie"] == "Lancer") {
+        $j1->lancerPartie($j1, $tabJoueurs, $nbJoueur, $megaJeu);
+        echo $j1->parties[0];
+    }
 ?>
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dede</title>
+</head>
+<body>
+    <h1>Dede À La Ferme</h1>
+
+    <?php
+        if(!isset($_POST["affichage"]) || $_POST["affichage"] == "Retour") {
+            // Page d'accueil
+    ?>
+            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+                <input type="submit" name="affichage" value="Joueurs">
+                <input type="submit" name="affichage" value="Bateau">
+            </form>
+    <?php
+        } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Joueurs") {
+            // Page d'affichage des joueurs
+            for($i=0; $i<count($tabJoueurs); $i++) {
+                echo "<p>".$tabJoueurs[$i]->login."</p>";
+            }   
+    ?>
+            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+                <input type="submit" name="affichage" value="Retour">
+            </form>
+    <?php
+        } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Bateau") {
+            // Page d'affichage des jeux
+            echo "<p>".$megaJeu."</p>";
+    ?>
+            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+                <input type="submit" name="partie" value="Lancer">
+                <input type="submit" name="affichage" value="Retour">
+            </form>
+    <?php
+        }
+    ?>
+</body>
+</html>
