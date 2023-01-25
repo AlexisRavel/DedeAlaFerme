@@ -7,11 +7,11 @@
         const VAL_EQUIPAGE = 4;
 
         public function __construct(
-            private string $regles = "Lancer les dés",
-            private array $parties = [],
-            private int $nbDes = 5,
-            private int $nbLancer = 3,
-            private array $tableDe = [],
+            string $regles,
+            array $parties,
+            int $nbDes,
+            int $nbLancer,
+            array $tableDe,
             private bool $aUnBateau = FALSE,
             private bool $aUnCapitaine = FALSE,
             private bool $aUnEquipage = FALSE,
@@ -90,18 +90,18 @@
                 $this->aUnBateau = TRUE;
                 unset($tabLancer[array_search(self::VAL_BATEAU, $tabLancer)]);
                 $tabLancer = array_values($tabLancer);
-                parent::__set("nbDes", parent::__get("nbDes")-1);
+                $this->nbDes -= 1;
                 if(in_array(self::VAL_CAPITAINE, $tabLancer)) {
                     $this->aUnCapitaine = TRUE;
                     unset($tabLancer[array_search(self::VAL_CAPITAINE, $tabLancer)]);
                     $tabLancer = array_values($tabLancer);
-                    parent::__set("nbDes", parent::__get("nbDes")-1);
+                    $this->nbDes -= 1;
                     if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
                         $this->aUnEquipage = TRUE;
                         unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
                         $tabLancer = array_values($tabLancer);
                         $this->equipageComplet = TRUE;
-                        parent::__set("nbDes", parent::__get("nbDes")-1);
+                        $this->nbDes -= 1;
                     }
                 }
             }
@@ -112,13 +112,13 @@
                 $this->aUnCapitaine = TRUE;
                 unset($tabLancer[array_search(self::VAL_CAPITAINE, $tabLancer)]);
                 $tabLancer = array_values($tabLancer);
-                parent::__set("nbDes", parent::__get("nbDes")-1);
+                $this->nbDes -= 1;
                 if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
                     $this->aUnEquipage = TRUE;
                     unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
                     $tabLancer = array_values($tabLancer);
                     $this->equipageComplet = TRUE;
-                    parent::__set("nbDes", parent::__get("nbDes")-1);
+                    $this->nbDes -= 1;
                 }
             }
         }
@@ -129,7 +129,7 @@
                 unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
                 $tabLancer = array_values($tabLancer);
                 $this->equipageComplet = TRUE;
-                parent::__set("nbDes", parent::__get("nbDes")-1);
+                $this->nbDes -= 1;
             }
         }
 

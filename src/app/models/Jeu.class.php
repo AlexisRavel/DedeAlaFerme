@@ -3,8 +3,8 @@
 
     abstract class Jeu {
         public function __construct(
-            private string $regles,
-            private array $parties = []
+            protected string $regles,
+            protected array $parties = []
         ) {}
 
         public function __get($name) {
