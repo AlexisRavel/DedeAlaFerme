@@ -1,4 +1,6 @@
 <?php
+    namespace src\app\models;
+
     class User {
         public function __construct(
             private int $idUser,

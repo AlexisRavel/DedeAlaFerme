@@ -5,8 +5,8 @@
     - Aff le result de chaque lancer des joueurs
     - Aff gagnant
 */
-    include("src/app/models/JeuBateau.class.php");
-    include("src/app/models/Joueur.class.php");
+    namespace src\app\models;
+    require("autoload.php");
 
     $tabJoueurs = [];
     

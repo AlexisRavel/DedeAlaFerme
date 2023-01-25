@@ -1,4 +1,6 @@
 <?php
+    namespace src\app\models;
+
     abstract class Jeu {
         public function __construct(
             private string $regles,
@@ -19,11 +21,13 @@
             };
         }
 
+        // TO DO
         // Aff le classement des gagnants de toutes les parties ->  login : score
         public function affClassement() {
             return 1;
         }
 
+        // TO DO
         // Aff les trois meilleurs joueurs
         public function top3() {
             return 1;
