@@ -58,7 +58,7 @@
             }
             $aff = $aff."Gagnant: ".$this->gagnant[0]." avec ".$this->gagnant[1]." de score";
             return $aff;
-        }
+        } 
 
         private function affHistorique($histo) {
             $aff = "";
@@ -71,5 +71,5 @@
             }
             return $aff."<br>";
         }
-    }
+    } 
 ?>

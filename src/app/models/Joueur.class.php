@@ -49,10 +49,13 @@
             $parties = $jeu->parties;
             $parties[] = $partie;
             $jeu->parties = $parties;
+
+            // On ajoute à tous les joueurs la partie
             for($i=0; $i<count($joueursConcurrent); $i++) {
                 $joueursConcurrent[$i]->parties[] = $partie;
             }
             
+            // Tous les joueurs lancent les dés
             for($i=0; $i<count($partie->joueurs); $i++) {
                 $jeu->lancerDes();
             }

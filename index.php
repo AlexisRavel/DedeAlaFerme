@@ -71,10 +71,11 @@
         echo $megaJeu->affClassement();
         } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
             // Page d'affichage des jeux
-            echo "<p>".$j1->parties[3]."</p>";
+            echo $j1->parties[count($j1->parties)-1];
+            
     ?>
             <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-                <input type="number" name="nbJoueurs" min="2" max="4" value="2">
+                <input type="number" name="nbJoueurs" min="2" max="4" value="<?= $_POST["nbJoueurs"] ?>">
                 <input type="submit" name="affichage" value="Lancer">
                 <input type="submit" name="affichage" value="Retour">
             </form>

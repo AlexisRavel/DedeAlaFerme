@@ -21,7 +21,7 @@
             };
         }
 
-        // Aff le classement des gagnants de toutes les parties ->  login : score
+        // Aff le classement des gagnants de toutes les parties ->  position : login : score
         public function affClassement() {
             // Récupération de tous les gagnants
             $tabGagnants = array();
@@ -73,12 +73,6 @@
 
         function cmp($a, $b) {
             return $a[1]>$b[1] ? null : $a;
-        }
-
-        // TO DO
-        // Aff les trois meilleurs joueurs
-        public function top3() {
-            return 1;
         }
 
         public function __toString() {
