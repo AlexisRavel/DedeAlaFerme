@@ -17,11 +17,10 @@
     
     // Init des jeux
     $megaJeu = new JeuBateau("Lancer les dés", [], 5, 3, [], []);
-    $nbJoueur = 2;
     
-    if(isset($_POST["partie"]) && $_POST["partie"] == "Lancer") {
+    if(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
+        $nbJoueur = $_POST["nbJoueurs"];
         $j1->lancerPartie($j1, $tabJoueurs, $nbJoueur, $megaJeu);
-        echo $j1->parties[0];
     }
 ?>
 
@@ -37,7 +36,7 @@
     <h1>Dede À La Ferme</h1>
 
     <?php
-        if(!isset($_POST["affichage"]) || $_POST["affichage"] == "Retour") {
+        if(empty($_POST) || $_POST["affichage"] == "Retour") {
             // Page d'accueil
     ?>
             <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
@@ -60,7 +59,18 @@
             echo "<p>".$megaJeu."</p>";
     ?>
             <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
-                <input type="submit" name="partie" value="Lancer">
+                <input type="number" name="nbJoueurs" min="2" max="4" value="2">
+                <input type="submit" name="affichage" value="Lancer">
+                <input type="submit" name="affichage" value="Retour">
+            </form>
+    <?php
+        } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
+            // Page d'affichage des jeux
+            echo "<p>".$j1->parties[0]."</p>";
+    ?>
+            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+                <input type="number" name="nbJoueurs" min="2" max="4" value="2">
+                <input type="submit" name="affichage" value="Lancer">
                 <input type="submit" name="affichage" value="Retour">
             </form>
     <?php

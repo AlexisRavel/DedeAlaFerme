@@ -30,10 +30,7 @@
             };
         }
 
-        /*
-            Compare le score de chaque joueur et garde le plus grand
-            !!! Ne mache pas si même score et score != 0 !!!
-        */
+        // Compare le score de chaque joueur et garde le plus grand
         public function definirGagnant() {
             $plusGrandScore = 0;
             $joueurGagnant = null;
@@ -41,6 +38,8 @@
                 if($this->scores[$i]["Score"] > $plusGrandScore) {
                     $plusGrandScore = $this->scores[$i]["Score"];
                     $joueurGagnant = $this->joueurs[$i]->login;
+                } elseif($this->scores[$i]["Score"] != 0 && $this->scores[$i]["Score"] == $plusGrandScore) {
+                    $joueurGagnant = $joueurGagnant." et ".$this->joueurs[$i]->login." sont gagnants ";
                 }
             }
             if($joueurGagnant == null) {

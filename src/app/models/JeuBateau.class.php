@@ -63,10 +63,7 @@
             // Si équipageComplet == conditions victoires vérifiées -> calcul du score
             $dernierLancer = $this->tableDe[count($this->tableDe)-1];
             if($this->equipageComplet) {
-                $score = 0;
-                for($i=0; $i<count($dernierLancer); $i++) {
-                    $score += $dernierLancer[$i];
-                }
+                $score = array_sum($dernierLancer);
                 end($this->parties)->scores = ["Score"=>$score, "Historique"=>$this->historiqueDe];
                 return 1;
             }
