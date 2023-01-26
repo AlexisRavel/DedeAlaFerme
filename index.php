@@ -17,6 +17,9 @@
     
     // Init des jeux
     $megaJeu = new JeuBateau("Lancer les dés", [], 5, 3, [], []);
+    $j2->lancerPartie($j2, $tabJoueurs, 4, $megaJeu);
+    $j3->lancerPartie($j3, $tabJoueurs, 4, $megaJeu);
+    $j4->lancerPartie($j4, $tabJoueurs, 4, $megaJeu);
     
     if(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
         $nbJoueur = $_POST["nbJoueurs"];
@@ -64,9 +67,11 @@
                 <input type="submit" name="affichage" value="Retour">
             </form>
     <?php
+        echo "<h2>Classement:</h2>";
+        echo $megaJeu->affClassement();
         } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
             // Page d'affichage des jeux
-            echo "<p>".$j1->parties[0]."</p>";
+            echo "<p>".$j1->parties[3]."</p>";
     ?>
             <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
                 <input type="number" name="nbJoueurs" min="2" max="4" value="2">
