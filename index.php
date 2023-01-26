@@ -16,8 +16,8 @@
     $tabJoueurs[] = $j4 = new Joueur(4, "Joueur4", "1234", "aucun");
     
     // Init des jeux
-    $megaJeu = new JeuBateau("Lancer les dés", [], 5, 3, []);
-    $nbJoueur = 4;
+    $megaJeu = new JeuBateau("Lancer les dés", [], 5, 3, [], []);
+    $nbJoueur = 2;
     
     if(isset($_POST["partie"]) && $_POST["partie"] == "Lancer") {
         $j1->lancerPartie($j1, $tabJoueurs, $nbJoueur, $megaJeu);

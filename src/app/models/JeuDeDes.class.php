@@ -7,7 +7,8 @@
             array $parties,
             protected int $nbDes,
             protected int $nbLancer,
-            protected array $tableDe
+            protected array $tableDe,
+            protected array $historiqueDe
         ) {
             parent::__construct($regles, $parties);
         }
@@ -32,18 +33,25 @@
             };
         }
 
-        // Lance les des, retourne tableDe -> la liste de tout les lancers
+        // Lance les des, vérifie les lancers, si score calculer dans traitementLancer -> finTraitement = TRUE
         public function lancerDes() {
             $this->resetJeu();
-            $this->tableDe = [];
-            $finTraitement = 0;
+            // Init des tables de lancers
+            $this->tableDe = array();
+            $this->historiqueDe = array();
+            $finTraitement = FALSE;
+
+            // Lance les dés puis vérifie chaque lancer
             for($i=0; $i<$this->nbLancer; $i++) {
                 $tabLancer = [];
                 for($y=0; $y<$this->nbDes; $y++) {
                     $tabLancer[] = random_int(1, 6);
                 }
                 $this->tableDe[] = $tabLancer;
-                $finTraitement = $this->traitementLancer($tabLancer, $i, $this->tableDe);
+                $this->historiqueDe[] = $tabLancer;
+                $finTraitement = $this->traitementLancer();
+
+                // Terminer les lancers si score calculer
                 if($finTraitement) {
                     return 1;
                 }
@@ -53,6 +61,6 @@
         // Reset les booleans et les tableaux pour les prochains lancers
         abstract function resetJeu();
 
-        abstract function traitementLancer($tabLancer, $numLancer, $table);
+        abstract function traitementLancer();
     }
 ?>

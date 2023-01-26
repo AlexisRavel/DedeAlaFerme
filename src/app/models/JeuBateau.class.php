@@ -12,12 +12,13 @@
             int $nbDes,
             int $nbLancer,
             array $tableDe,
+            array $historiqueDe,
             private bool $aUnBateau = FALSE,
             private bool $aUnCapitaine = FALSE,
             private bool $aUnEquipage = FALSE,
             private bool $equipageComplet = FALSE
         ) {
-            parent::__construct($regles, $parties, $nbDes, $nbLancer, $tableDe);
+            parent::__construct($regles, $parties, $nbDes, $nbLancer, $tableDe, $historiqueDe);
         }
 
         public function __get($name) {
@@ -49,25 +50,28 @@
         }
 
        
-        public function traitementLancer($tabLancer, $numLancer, $table) {
+        public function traitementLancer() {
+            // Vérifie le lancer en fonction des jets précédents
             if($this->aUnBateau && $this->aUnCapitaine) {
-                $this->verifSiEquipage($tabLancer);
+                $this->verifSiEquipage();
             } elseif($this->aUnBateau) {
-                $this->verifSiCapitaineEquipage($tabLancer);
+                $this->verifSiCapitaineEquipage();
             } else {
-                $this->verifSiRien($tabLancer);
+                $this->verifSiRien();
             }
 
+            // Si équipageComplet == conditions victoires vérifiées -> calcul du score
+            $dernierLancer = $this->tableDe[count($this->tableDe)-1];
             if($this->equipageComplet) {
                 $score = 0;
-                for($i=0; $i<count($tabLancer); $i++) {
-                    $score += $tabLancer[$i];
+                for($i=0; $i<count($dernierLancer); $i++) {
+                    $score += $dernierLancer[$i];
                 }
-                end($this->parties)->scores = ["Score"=>$score, "Historique"=>$table];
+                end($this->parties)->scores = ["Score"=>$score, "Historique"=>$this->historiqueDe];
                 return 1;
             }
-            if($numLancer+1 == $this->nbLancer) {
-                end($this->parties)->scores = ["Score"=>0, "Historique"=>$table];
+            if(count($this->tableDe) == $this->nbLancer) {
+                end($this->parties)->scores = ["Score"=>0, "Historique"=>$this->historiqueDe];
                 return 1;
             }
 
@@ -75,67 +79,63 @@
         }
 
         /*
-            POUR LES 3 FONCTIONS verif:
-                
-            1- Verif si le dé rechercher est dans le lancer
-            Si TRUE:
-            2- Set la variable correspondante à TRUE
-            3- Retirer le de pour le calcul du score
-            4- Réindexer le tableau (voir unset())
-            Et si les trois booleans aUnBateau, aUnCapitaine et aUnEquipage == TRUE:
-            Set equipageComplet == TRUE
+            Pour chaque étape des trois fonctions verif:
+            1- On vérifie si le dernier lancer contient VAL_BATEAU CAPITAINE ou EQUIPAGE, Si c'est le cas:
+            2- On set le boolean correspondant à TRUE et on enleve un dé
+            Si on arrive au bout de toutes les conditions -> on enleve dans le dernier lancer tous les dés que l'on vient de trouver,
+            on set equipageComplet à TRUE et on remplace dans tableDe le nouveau tableau sans les dés necessaires à la victoire pour le calcul du score
         */
-        private function verifSiRien(&$tabLancer) {
-            if(in_array(self::VAL_BATEAU, $tabLancer)) {
+        private function verifSiRien() {
+            $dernierLancer = $this->tableDe[count($this->tableDe)-1];
+            if(in_array(self::VAL_BATEAU, $dernierLancer)) {
                 $this->aUnBateau = TRUE;
-                unset($tabLancer[array_search(self::VAL_BATEAU, $tabLancer)]);
-                $tabLancer = array_values($tabLancer);
-                $this->nbDes -= 1;
-                if(in_array(self::VAL_CAPITAINE, $tabLancer)) {
+                $this->nbDes--;
+                if(in_array(self::VAL_CAPITAINE, $dernierLancer)) {
                     $this->aUnCapitaine = TRUE;
-                    unset($tabLancer[array_search(self::VAL_CAPITAINE, $tabLancer)]);
-                    $tabLancer = array_values($tabLancer);
-                    $this->nbDes -= 1;
-                    if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
+                    $this->nbDes--;
+                    if(in_array(self::VAL_EQUIPAGE, $dernierLancer)) {
                         $this->aUnEquipage = TRUE;
-                        unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
-                        $tabLancer = array_values($tabLancer);
+                        $this->nbDes--;
                         $this->equipageComplet = TRUE;
-                        $this->nbDes -= 1;
+                        unset($dernierLancer[array_search(self::VAL_BATEAU, $dernierLancer)]);
+                        unset($dernierLancer[array_search(self::VAL_CAPITAINE, $dernierLancer)]);
+                        unset($dernierLancer[array_search(self::VAL_EQUIPAGE, $dernierLancer)]);
+                        $this->tableDe[count($this->tableDe)-1] = array_values($dernierLancer);
                     }
                 }
             }
         }
 
-        private function verifSiCapitaineEquipage(&$tabLancer) {
-            if(in_array(self::VAL_CAPITAINE, $tabLancer)) {
+        private function verifSiCapitaineEquipage() {
+            $dernierLancer = $this->tableDe[count($this->tableDe)-1];
+            if(in_array(self::VAL_CAPITAINE, $dernierLancer)) {
                 $this->aUnCapitaine = TRUE;
-                unset($tabLancer[array_search(self::VAL_CAPITAINE, $tabLancer)]);
-                $tabLancer = array_values($tabLancer);
-                $this->nbDes -= 1;
-                if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
+                $this->nbDes--;
+                if(in_array(self::VAL_EQUIPAGE, $dernierLancer)) {
                     $this->aUnEquipage = TRUE;
-                    unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
-                    $tabLancer = array_values($tabLancer);
+                    $this->nbDes--;
                     $this->equipageComplet = TRUE;
-                    $this->nbDes -= 1;
+                    unset($dernierLancer[array_search(self::VAL_CAPITAINE, $dernierLancer)]);
+                    unset($dernierLancer[array_search(self::VAL_EQUIPAGE, $dernierLancer)]);
+                    $this->tableDe[count($this->tableDe)-1] = array_values($dernierLancer);
                 }
             }
         }
 
-        private function verifSiEquipage(&$tabLancer) {
-            if(in_array(self::VAL_EQUIPAGE, $tabLancer)) {
+        private function verifSiEquipage() {
+            $dernierLancer = $this->tableDe[count($this->tableDe)-1];
+            if(in_array(self::VAL_EQUIPAGE, $dernierLancer)) {
                 $this->aUnEquipage = TRUE;
-                unset($tabLancer[array_search(self::VAL_EQUIPAGE, $tabLancer)]);
-                $tabLancer = array_values($tabLancer);
+                $this->nbDes--;
                 $this->equipageComplet = TRUE;
-                $this->nbDes -= 1;
+                unset($dernierLancer[array_search(self::VAL_EQUIPAGE, $dernierLancer)]);
+                $this->tableDe[count($this->tableDe)-1] = array_values($dernierLancer);
             }
         }
 
         // Reset les booleans et les tableaux pour les prochains lancers
         public function resetJeu() {
-            parent::__set("nbDes", 5);
+            $this->nbDes = 5;
             $this->tableDe = array();
             $this->aUnBateau = FALSE;
             $this->aUnCapitaine = FALSE;
