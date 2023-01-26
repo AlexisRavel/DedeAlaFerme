@@ -42,7 +42,7 @@
         if(empty($_POST) || $_POST["affichage"] == "Retour") {
             // Page d'accueil
     ?>
-            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                 <input type="submit" name="affichage" value="Joueurs">
                 <input type="submit" name="affichage" value="Bateau">
             </form>
@@ -53,7 +53,7 @@
                 echo "<p>".$tabJoueurs[$i]->login."</p>";
             }   
     ?>
-            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                 <input type="submit" name="affichage" value="Retour">
             </form>
     <?php
@@ -61,7 +61,7 @@
             // Page d'affichage des jeux
             echo "<p>".$megaJeu."</p>";
     ?>
-            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                 <input type="number" name="nbJoueurs" min="2" max="4" value="2">
                 <input type="submit" name="affichage" value="Lancer">
                 <input type="submit" name="affichage" value="Retour">
@@ -74,7 +74,7 @@
             echo $j1->parties[count($j1->parties)-1];
             
     ?>
-            <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+            <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                 <input type="number" name="nbJoueurs" min="2" max="4" value="<?= $_POST["nbJoueurs"] ?>">
                 <input type="submit" name="affichage" value="Lancer">
                 <input type="submit" name="affichage" value="Retour">
