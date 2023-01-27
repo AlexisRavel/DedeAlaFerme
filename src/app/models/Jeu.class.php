@@ -71,6 +71,8 @@
             echo "</table>";
         }
 
+        abstract public function jouerTour(Partie $partie);
+
         function cmp($a, $b) {
             return $a[1]>$b[1] ? null : $a;
         }

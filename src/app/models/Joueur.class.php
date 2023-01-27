@@ -32,36 +32,6 @@
             };
         }
 
-        public function lancerPartie($j1, $tabJoueurs, $nbJoueur, $jeu) {
-            // Prends d'autres joueurs au hasard
-            $joueursConcurrent = [$j1];
-            for($i=1; $i<$nbJoueur; $i++) {
-                $joueurRandom = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
-                while(in_array($joueurRandom, $joueursConcurrent)) {
-                    $joueurRandom = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
-                }
-                $joueursConcurrent[] = $joueurRandom;
-            }
-
-            // Création d'une partie
-            $date = new \DateTime('now', new \DateTimeZone("Europe/Paris"));
-            $partie = new Partie($date, [], $jeu, $joueursConcurrent);
-            $parties = $jeu->parties;
-            $parties[] = $partie;
-            $jeu->parties = $parties;
-
-            // On ajoute à tous les joueurs la partie
-            for($i=0; $i<count($joueursConcurrent); $i++) {
-                $joueursConcurrent[$i]->parties[] = $partie;
-            }
-            
-            // Tous les joueurs lancent les dés
-            for($i=0; $i<count($partie->joueurs); $i++) {
-                $jeu->lancerDes();
-            }
-            $partie->definirGagnant();
-        }
-
         public function __toString() {
             $aff = parent::__toString();
             return $aff;

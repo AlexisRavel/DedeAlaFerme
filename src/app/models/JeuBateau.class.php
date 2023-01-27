@@ -7,12 +7,12 @@
         const VAL_EQUIPAGE = 4;
 
         public function __construct(
-            string $regles,
-            array $parties,
-            int $nbDes,
-            int $nbLancer,
-            array $tableDe,
-            array $historiqueDe,
+            string $regles = "Lancer les dés", 
+            array $parties = array(),
+            int $nbDes = 5,
+            int $nbLancer = 3,
+            array $tableDe = array(),
+            array $historiqueDe = array(),
             private bool $aUnBateau = FALSE,
             private bool $aUnCapitaine = FALSE,
             private bool $aUnEquipage = FALSE,
@@ -64,15 +64,13 @@
             $dernierLancer = $this->tableDe[count($this->tableDe)-1];
             if($this->equipageComplet) {
                 $score = array_sum($dernierLancer);
-                end($this->parties)->scores = ["Score"=>$score, "Historique"=>$this->historiqueDe];
-                return 1;
+                return ["Score"=>$score, "Historique"=>$this->historiqueDe];
             }
             if(count($this->tableDe) == $this->nbLancer) {
-                end($this->parties)->scores = ["Score"=>0, "Historique"=>$this->historiqueDe];
-                return 1;
+                return ["Score"=>0, "Historique"=>$this->historiqueDe];
             }
 
-            return 0;
+            return false;
         }
 
         /*

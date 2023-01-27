@@ -8,7 +8,8 @@
             protected int $nbDes,
             protected int $nbLancer,
             protected array $tableDe,
-            protected array $historiqueDe
+            protected array $historiqueDe,
+            
         ) {
             parent::__construct($regles, $parties);
         }
@@ -33,6 +34,14 @@
             };
         }
 
+        public function jouerTour(Partie $partie) {
+
+            
+            $resultat = $this->lancerDes();
+            $partie->score = $resultat["Score"];
+            $partie->historique = $resultat["Historique"];
+        }
+
         // Lance les des, vérifie les lancers, si score calculer dans traitementLancer -> finTraitement = TRUE
         public function lancerDes() {
             $this->resetJeu();
@@ -53,7 +62,7 @@
 
                 // Terminer les lancers si score calculer
                 if($finTraitement) {
-                    return 1;
+                    return $finTraitement;
                 }
             }
         }

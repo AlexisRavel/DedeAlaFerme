@@ -8,6 +8,19 @@
     namespace src\app\models;
     require("autoload.php");
 
+    function setConcurrent($jInitiateur, $nbJoueur, $tabJoueurs) {
+        // Prends d'autres joueurs au hasard
+        $joueursConcurrent = [$jInitiateur];
+        for($i=1; $i<$nbJoueur; $i++) {
+            $joueurRandom = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
+            while(in_array($joueurRandom, $joueursConcurrent)) {
+                $joueurRandom = $tabJoueurs[random_int(0, count($tabJoueurs)-1)];
+            }
+            $joueursConcurrent[] = $joueurRandom;
+        }
+        return $joueursConcurrent;
+    }
+
     // Init des joueurs
     $tabJoueurs = [];
     $tabJoueurs[] = $j1 = new Joueur(1, "Joueur1", "megaMdp", "aucun");
@@ -16,14 +29,23 @@
     $tabJoueurs[] = $j4 = new Joueur(4, "Joueur4", "1234", "aucun");
     
     // Init des jeux
-    $megaJeu = new JeuBateau("Lancer les dés", [], 5, 3, [], []);
-    $j2->lancerPartie($j2, $tabJoueurs, 4, $megaJeu);
-    $j3->lancerPartie($j3, $tabJoueurs, 4, $megaJeu);
-    $j4->lancerPartie($j4, $tabJoueurs, 4, $megaJeu);
+    $megaJeu = new JeuBateau();
+
+    // Init des parties pour le classement
+    /*
+    $j2->lancerPartie($tabJoueurs, 4, $megaJeu);
+    $j3->lancerPartie($tabJoueurs, 4, $megaJeu);
+    $j4->lancerPartie($tabJoueurs, 4, $megaJeu);
+    */
     
     if(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
         $nbJoueur = $_POST["nbJoueurs"];
-        $j1->lancerPartie($j1, $tabJoueurs, $nbJoueur, $megaJeu);
+        $manager = new ManagerPartie();
+        $manager->nouvellePartie(setConcurrent($j1, 2, $tabJoueurs) ,$megaJeu);
+        // Page d'affichage des jeux
+        for($i=0; $i<count($manager->concurrent); $i++) {
+            echo $manager->concurrent[$i]->parties[count($manager->concurrent[$i]->parties)-1];
+        }
     }
 ?>
 
@@ -69,10 +91,7 @@
     <?php
         echo "<h2>Classement:</h2>";
         echo $megaJeu->affClassement();
-        } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {
-            // Page d'affichage des jeux
-            echo $j1->parties[count($j1->parties)-1];
-            
+        } elseif(isset($_POST["affichage"]) && $_POST["affichage"] == "Lancer") {            
     ?>
             <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
                 <input type="number" name="nbJoueurs" min="2" max="4" value="<?= $_POST["nbJoueurs"] ?>">
